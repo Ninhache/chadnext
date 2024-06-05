@@ -1,8 +1,10 @@
 import { AlertTriangleIcon } from "lucide-react";
 import { BillingForm } from "~/components/billing-form";
 import { Alert, AlertDescription } from "~/components/ui/alert";
+import { siteConfig } from "~/config/site";
 import { stripe } from "~/lib/stripe";
 import { getUserSubscriptionPlan } from "~/lib/subscription";
+import { getScopedI18n } from "~/locales/server";
 import { validateRequest } from "~/server/auth";
 
 export const revalidate = 0;
@@ -10,6 +12,7 @@ export const dynamic = "force-dynamic";
 
 export default async function Billing() {
   const { user } = await validateRequest();
+  const scopedT = await getScopedI18n("billing");
 
   const subscriptionPlan = await getUserSubscriptionPlan(user?.id as string);
 
@@ -28,17 +31,19 @@ export default async function Billing() {
           <AlertTriangleIcon className="h-5 w-5 shrink-0" />
           <div>
             <AlertDescription>
-              <strong>ChadNext</strong> just demonstrates how to use Stripe in
-              Next.js App router. Please use test cards from{" "}
-              <a
-                href="https://stripe.com/docs/testing#cards"
-                target="_blank"
-                rel="noreferrer"
-                className="font-medium underline underline-offset-4"
-              >
-                Stripe docs
-              </a>
-              .
+              {scopedT("alertDescription", {
+                name: <strong>{siteConfig().name}</strong>,
+                link: (
+                  <a
+                    href="https://stripe.com/docs/testing#cards"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-medium underline underline-offset-4"
+                  >
+                    Stripe docs
+                  </a>
+                ),
+              })}
             </AlertDescription>
           </div>
         </div>

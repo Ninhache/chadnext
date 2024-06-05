@@ -12,7 +12,7 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const locale = params.locale;
+  const locale = params.locale as "en" | "fr";
   const site = siteConfig(locale);
 
   const siteOgImage = `${siteUrl}/api/og?locale=${locale}`;
@@ -101,15 +101,16 @@ export default function SubLayout({
 }) {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <Header />
-      <main>
-        {children}
-        {loginDialog}
-      </main>
       <I18nProviderClient locale={locale}>
+        <Header />
+        <main>
+          {children}
+          {loginDialog}
+        </main>
+
         <Footer />
+        <Toaster />
       </I18nProviderClient>
-      <Toaster />
     </ThemeProvider>
   );
 }

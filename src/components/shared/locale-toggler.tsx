@@ -7,7 +7,11 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { useChangeLocale, useCurrentLocale } from "~/locales/client";
+import {
+  useChangeLocale,
+  useCurrentLocale,
+  useScopedI18n,
+} from "~/locales/client";
 import { Button } from "../ui/button";
 
 const locales = [
@@ -25,12 +29,14 @@ export default function LocaleToggler() {
   const changeLocale = useChangeLocale({ preserveSearchParams: true });
   const currentLocale = useCurrentLocale();
 
+  const scopedT = useScopedI18n("toggle");
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="sm" className="w-9 px-0">
           <LanguagesIcon className=" h-5 w-5 " />
-          <span className="sr-only">Change Locale</span>
+          <span className="sr-only">{scopedT("labelLang")}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

@@ -25,6 +25,7 @@ import {
   removeUserOldImageFromCDN,
   updateUser,
 } from "./actions";
+import { useScopedI18n } from "~/locales/client";
 
 const ImageUploadModal = dynamic(
   () => import("~/components/layout/image-upload-modal")
@@ -37,6 +38,7 @@ const CancelConfirmModal = dynamic(
 export default function SettingsForm({ currentUser }: { currentUser: User }) {
   const oldImage = useRef("");
   const [pending, startTransition] = useTransition();
+  const scopedT = useScopedI18n("settings");
 
   const form = useForm<SettingsValues>({
     resolver: zodResolver(settingsSchema),
@@ -72,12 +74,12 @@ export default function SettingsForm({ currentUser }: { currentUser: User }) {
       return updatePromise
         .then(() => {
           toast({
-            title: "Updated successfully!",
+            title: scopedT("upload.success"),
           });
         })
         .catch(() => {
           toast({
-            title: "Something went wrong.",
+            title: scopedT("upload.error"),
             variant: "destructive",
           });
         });
@@ -115,9 +117,7 @@ export default function SettingsForm({ currentUser }: { currentUser: User }) {
                   <ImageUploadModal onChange={field.onChange} />
                 </Avatar>
               </FormControl>
-              <FormDescription>
-                Click on the avatar to upload new one.
-              </FormDescription>
+              <FormDescription>{scopedT("uploadAvatar")}</FormDescription>
             </FormItem>
           )}
         ></FormField>
@@ -126,9 +126,12 @@ export default function SettingsForm({ currentUser }: { currentUser: User }) {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>{scopedT("form.name")}</FormLabel>
               <FormControl>
-                <Input placeholder="Your name" {...field} />
+                <Input
+                  placeholder={scopedT("form.namePlaceholder")}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -139,12 +142,12 @@ export default function SettingsForm({ currentUser }: { currentUser: User }) {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>{scopedT("form.email")}</FormLabel>
               <FormControl>
                 <Input
-                  className=" bg-muted"
+                  className="bg-muted"
                   readOnly
-                  placeholder="Your email address"
+                  placeholder={scopedT("form.emailPlaceholder")}
                   {...field}
                 />
               </FormControl>
@@ -168,10 +171,10 @@ export default function SettingsForm({ currentUser }: { currentUser: User }) {
             {formState.isSubmitting || pending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Updating...
+                {scopedT("upload.loading")}
               </>
             ) : (
-              "Update"
+              scopedT("upload.save")
             )}
           </Button>
         </div>

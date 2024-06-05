@@ -2,9 +2,11 @@ import Link from "next/link";
 import { Card } from "~/components/ui/card";
 import { getProjects } from "./action";
 import CreateProjectModal from "./create-project-modal";
+import { getScopedI18n } from "~/locales/server";
 
 export default async function Projects() {
   const projects = await getProjects();
+  const scopedT = await getScopedI18n("projects");
 
   return (
     <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4 ">
@@ -21,7 +23,7 @@ export default async function Projects() {
             href={`/dashboard/projects/${project.id}`}
             className="absolute inset-0 "
           >
-            <span className="sr-only">View project details</span>
+            <span className="sr-only">{scopedT("details")}</span>
           </Link>
         </Card>
       ))}

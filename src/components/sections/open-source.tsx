@@ -1,17 +1,20 @@
 import Link from "next/link";
 import { siteConfig } from "~/config/site";
+import { getScopedI18n } from "~/locales/server";
 
-export default function OpenSource() {
+export default async function OpenSource() {
+  const scopedT = await getScopedI18n("openSource");
   return (
     <section className="">
       <div className="container pb-14 lg:pb-24">
         <div className="mx-auto flex max-w-[58rem] flex-col items-center justify-center gap-4 text-center">
           <h2 className="font-heading text-3xl leading-[1.1] sm:text-3xl md:text-6xl">
-            Proudly Open Source
+            {scopedT("title")}
           </h2>
           <p className="max-w-[85%] text-balance leading-normal text-muted-foreground sm:text-lg sm:leading-7">
-            ChadNext is open source and powered by open source software. The
-            code is available on GitHub.
+            {scopedT("abstract", {
+              name: siteConfig().name,
+            })}
           </p>
           <Link
             className="underline underline-offset-4"
@@ -19,7 +22,8 @@ export default function OpenSource() {
             target="_blank"
             rel="noreferrer"
           >
-            <span className="font-semibold">Star me</span>, Onii Chan {`>_<`}
+            <span className="font-semibold">{scopedT("starMe")}</span>, Onii
+            Chan {`>_<`}
           </Link>
         </div>
       </div>

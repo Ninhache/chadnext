@@ -15,22 +15,24 @@ import { Button } from "~/components/ui/button";
 import { Card, CardDescription, CardTitle } from "~/components/ui/card";
 import { toast } from "~/components/ui/use-toast";
 import { deleteProjectById } from "../action";
+import { useScopedI18n } from "~/locales/client";
 
 export default function DeleteCard({ id }: { id: string }) {
+  const scopedT = useScopedI18n("projects");
   const [pending, startTransition] = useTransition();
   const handleDelete = async () => {
     startTransition(() =>
       deleteProjectById(id)
         .then(() => {
           toast({
-            title: "Project deleted successfully.",
+            title: scopedT("delete.success"),
           });
         })
         .catch((error) => {
           console.error(error);
           toast({
-            title: "Error deleting project.",
-            description: "Please try again.",
+            title: scopedT("delete.error.unknown"),
+            description: scopedT("delete.tryAgain"),
             variant: "destructive",
           });
         })
@@ -39,29 +41,30 @@ export default function DeleteCard({ id }: { id: string }) {
   return (
     <Card className="mt-5 flex items-center justify-between p-6">
       <div>
-        <CardTitle className=" mb-2.5">Delete Project</CardTitle>
+        <CardTitle className=" mb-2.5">{scopedT("delete.label")}</CardTitle>
         <CardDescription>
-          The project will be permanently deleted. This action is irreversible
-          and can not be undone.
+          {scopedT("delete.confirmationDescription")}
         </CardDescription>
       </div>
 
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button variant="destructive">Delete</Button>
+          <Button variant="destructive">{scopedT("delete.label")}</Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogTitle>
+              {scopedT("delete.confirmationQuestion")}
+            </AlertDialogTitle>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{scopedT("delete.cancel")}</AlertDialogCancel>
             <AlertDialogAction asChild>
               <Button variant="destructive" onClick={handleDelete}>
                 {pending && (
                   <Icons.spinner className="mr-2 h-5 w-5 animate-spin" />
                 )}
-                Delete
+                {scopedT("delete.delete")}
               </Button>
             </AlertDialogAction>
           </AlertDialogFooter>

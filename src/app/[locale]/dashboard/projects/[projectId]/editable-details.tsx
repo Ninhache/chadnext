@@ -17,18 +17,14 @@ import { Input } from "~/components/ui/input";
 import { toast } from "~/components/ui/use-toast";
 import { updateProjectById } from "../action";
 import { projectSchema, type ProjectFormValues } from "../create-project-modal";
-
-// const projectEditSchema = projectSchema.extend({
-//   id: z.string().readonly(),
-// });
-
-// type ProjectEditValues = z.infer<typeof projectEditSchema>;
+import { useScopedI18n } from "~/locales/client";
 
 export default function EditableDetails({
   initialValues,
 }: {
   initialValues: ProjectFormValues & { id: string };
 }) {
+  const scopedT = useScopedI18n("projects");
   const form = useForm<ProjectFormValues>({
     resolver: zodResolver(projectSchema),
     values: initialValues,
@@ -38,14 +34,14 @@ export default function EditableDetails({
     try {
       await updateProjectById(initialValues.id, values);
       toast({
-        title: "Project Updated successfully.",
+        title: scopedT("update.success"),
       });
       form.reset();
     } catch (error) {
       console.error(error);
       toast({
-        title: "Error creating project.",
-        description: "Please try again.",
+        title: scopedT("update.error.unknown"),
+        description: scopedT("update.tryAgain"),
         variant: "destructive",
       });
     }
@@ -54,7 +50,7 @@ export default function EditableDetails({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="mt-5 space-y-6">
         <FormItem>
-          <FormLabel>ID</FormLabel>
+          <FormLabel>{scopedT("update.form.id")}</FormLabel>
           <FormControl>
             <div className="relative ">
               <Input value={initialValues.id} readOnly disabled />
@@ -69,9 +65,12 @@ export default function EditableDetails({
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>{scopedT("update.form.name")}</FormLabel>
               <FormControl>
-                <Input placeholder="XYZ" {...field} />
+                <Input
+                  placeholder={scopedT("update.form.namePlaceholder")}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -82,9 +81,12 @@ export default function EditableDetails({
           name="domain"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Domain</FormLabel>
+              <FormLabel>{scopedT("update.form.domain")}</FormLabel>
               <FormControl>
-                <Input placeholder="xyz.com" {...field} />
+                <Input
+                  placeholder={scopedT("update.form.domainPlaceholder")}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -97,7 +99,7 @@ export default function EditableDetails({
           {form.formState.isSubmitting && (
             <Icons.spinner className={"mr-2 h-5 w-5 animate-spin "} />
           )}
-          Save
+          {scopedT("update.save")}
         </Button>
       </form>
     </Form>

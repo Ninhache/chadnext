@@ -9,6 +9,7 @@ import {
   Tailwind,
   Text,
 } from "@react-email/components";
+import { siteConfig } from "~/config/site";
 
 interface ThanksTemplateProps {
   userName: string;
@@ -17,15 +18,16 @@ interface ThanksTemplateProps {
 const ThanksTemp: React.FC<Readonly<ThanksTemplateProps>> = ({ userName }) => (
   <Html>
     <Head />
-    <Preview>Welcome to ChadNext.</Preview>
+    <Preview>Welcome to {siteConfig().name}.</Preview>
     <Tailwind>
       <Body className=" bg-gray-100">
         <Container className="mx-auto my-10 bg-white">
           <Section className="my-8">
             <Text className="mx-10 text-lg font-bold">Hi {userName} 👋 ,</Text>
             <Text className="mx-10 text-base">
-              Welcome to ChadNext. Now you can build your idea faster. You can
-              star the project on GitHub. That would be very helpful.
+              Welcome to {siteConfig().name}. Now you can build your idea
+              faster. You can star the project on GitHub. That would be very
+              helpful.
             </Text>
             <Section className="my-5 text-center">
               <Button
@@ -38,7 +40,9 @@ const ThanksTemp: React.FC<Readonly<ThanksTemplateProps>> = ({ userName }) => (
               </Button>
             </Section>
             <Text className="mx-10  text-base font-light">Best,</Text>
-            <Text className="mx-10 text-base font-bold">ChadNext</Text>
+            <Text className="mx-10 text-base font-bold">
+              {siteConfig().name}
+            </Text>
           </Section>
         </Container>
       </Body>

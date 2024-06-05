@@ -12,7 +12,9 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { toast } from "~/components/ui/use-toast";
-import { cn, formatDate } from "~/lib/utils";
+import { parseDateTime } from "~/lib/time";
+import { cn } from "~/lib/utils";
+import { useCurrentLocale, useScopedI18n } from "~/locales/client";
 import { type UserSubscriptionPlan } from "~/types";
 interface BillingFormProps extends React.HTMLAttributes<HTMLFormElement> {
   subscriptionPlan: UserSubscriptionPlan & {
@@ -26,6 +28,8 @@ export function BillingForm({
   ...props
 }: BillingFormProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const locale = useCurrentLocale();
+  const scopedT = useScopedI18n("billing");
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -36,8 +40,8 @@ export function BillingForm({
 
     if (!response?.ok) {
       return toast({
-        title: "Something went wrong.",
-        description: "Please refresh the page and try again.",
+        title: scopedT("error"),
+        description: scopedT("tryAgain"),
         variant: "destructive",
       });
     }
@@ -55,10 +59,12 @@ export function BillingForm({
     <form className={cn(className)} onSubmit={onSubmit} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle>Subscription</CardTitle>
+          <CardTitle>{scopedT("title")}</CardTitle>
           <CardDescription>
             <em>
-              Currently on the <strong>{subscriptionPlan.name}</strong> plan.
+              {scopedT("abstract", {
+                name: <strong>{subscriptionPlan.name}</strong>,
+              })}
             </em>
           </CardDescription>
         </CardHeader>
@@ -75,9 +81,13 @@ export function BillingForm({
           {subscriptionPlan.isPro ? (
             <p className="rounded-full text-xs font-medium md:self-end ">
               {subscriptionPlan.isCanceled
-                ? "Your plan will be canceled on "
-                : "Your plan renews on "}
-              {formatDate(subscriptionPlan.stripeCurrentPeriodEnd)}.
+                ? scopedT("endPlan")
+                : scopedT("renewPlan")}
+              {parseDateTime(
+                `${subscriptionPlan.stripeCurrentPeriodEnd}`,
+                locale
+              )}
+              .
             </p>
           ) : null}
         </CardFooter>

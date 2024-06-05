@@ -11,6 +11,7 @@ import {
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
 import { Button } from "~/components/ui/button";
+import { useScopedI18n } from "~/locales/client";
 
 interface CancelConfirmModalProps {
   show: boolean;
@@ -25,22 +26,24 @@ export default function CancelConfirmModal({
   reset,
   isDisabled,
 }: CancelConfirmModalProps) {
+  const scopedT = useScopedI18n("confirmModal");
+
   return (
     <AlertDialog open={show} onOpenChange={setShow}>
       <AlertDialogTrigger asChild>
         <Button variant="destructive" type="reset" disabled={isDisabled}>
-          Cancel
+          {scopedT("cancel")}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>
-            Are you sure to discard the changes?
-          </AlertDialogTitle>
+          <AlertDialogTitle>{scopedT("ignore")}</AlertDialogTitle>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={reset}>Yes</AlertDialogCancel>
-          <AlertDialogAction>No</AlertDialogAction>
+          <AlertDialogCancel onClick={reset}>
+            {scopedT("yes")}
+          </AlertDialogCancel>
+          <AlertDialogAction>{scopedT("no")}</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

@@ -21,6 +21,7 @@ import { type SettingsValues } from "~/types";
 import Icons from "../shared/icons";
 import { Button } from "../ui/button";
 import { toast } from "../ui/use-toast";
+import { useScopedI18n } from "~/locales/client";
 
 const fileTypes = ["image"];
 
@@ -32,6 +33,7 @@ export default function ImageUploadModal({
   const [files, setFiles] = useState<File[]>([]);
   const [preview, setPreview] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const scopedT = useScopedI18n("imageUpload");
 
   const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
     if (acceptedFiles.length === 0) return;
@@ -47,8 +49,8 @@ export default function ImageUploadModal({
     validator(file) {
       if (hasFileNameSpaces(file.name)) {
         return {
-          code: "Spaces in file name",
-          message: "Spaces in file names are not acceptable!",
+          code: scopedT("error.spaceInNameCode"),
+          message: scopedT("error.spaceInNameDesc"),
         };
       }
       return null;
@@ -62,7 +64,7 @@ export default function ImageUploadModal({
         if (res) {
           onChange(res[0].url);
           toast({
-            title: "Uploaded successfully!",
+            title: scopedT("success"),
           });
           setShowModal(false);
         }
@@ -70,7 +72,7 @@ export default function ImageUploadModal({
       onUploadError: (e) => {
         console.error(e);
         toast({
-          title: "Error occurred while uploading!",
+          title: scopedT("error.unknown"),
           variant: "destructive",
         });
       },
@@ -111,7 +113,7 @@ export default function ImageUploadModal({
       </DialogTrigger>
       <DialogContent className="max-w-[450px]">
         <DialogHeader>
-          <DialogTitle>Image Upload</DialogTitle>
+          <DialogTitle>{scopedT("label")}</DialogTitle>
         </DialogHeader>
         <div>
           {preview ? (
@@ -132,16 +134,16 @@ export default function ImageUploadModal({
                   className="mr-10 text-destructive hover:text-destructive"
                   variant="outline"
                 >
-                  Cancel
+                  {scopedT("cancel")}
                 </Button>
                 <Button disabled={isUploading} onClick={handleUpload}>
                   {isUploading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Uploading...
+                      {scopedT("loading")}
                     </>
                   ) : (
-                    "Upload"
+                    scopedT("upload")
                   )}
                 </Button>
               </div>
@@ -154,11 +156,13 @@ export default function ImageUploadModal({
               <input className="" {...getInputProps()} />
               <div className=" space-y-2 text-center">
                 <div className="flex cursor-pointer flex-col items-center gap-y-2">
-                  <span className=" text-md">Drop Here</span>
+                  <span className=" text-md">{scopedT("dropHere")}</span>
                   <Icons.download size={40} />
                 </div>
-                <p className=" text-muted-foreground">OR</p>
-                <p className=" cursor-pointer text-sm">Click here</p>
+                <p className=" text-muted-foreground">{scopedT("or")}</p>
+                <p className=" cursor-pointer text-sm">
+                  {scopedT("clickHere")}
+                </p>
               </div>
             </div>
           )}
@@ -167,11 +171,13 @@ export default function ImageUploadModal({
           <div className=" text-right text-xs leading-normal">
             <p>
               <span className=" text-sm text-destructive">*</span>
-              {`Only Images are supported. Max file size is ${permittedFileInfo?.config.image?.maxFileSize}.`}
+              {scopedT("error.sizeExceed", {
+                size: permittedFileInfo?.config.image?.maxFileSize,
+              })}
             </p>
             <p>
               <span className=" text-sm text-destructive">*</span>
-              <strong>File name with spaces is not acceptable</strong>!
+              <strong>{scopedT("error.spaceInFileDesc")}</strong>!
             </p>
           </div>
         </DialogFooter>

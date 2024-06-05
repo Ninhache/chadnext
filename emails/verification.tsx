@@ -12,6 +12,7 @@ import {
   Tailwind,
   Text,
 } from "@react-email/components";
+import { siteConfig } from "~/config/site";
 
 const siteUrl =
   process.env.NEXT_PUBLIC_URL ?? "https://chadnext.moinulmoin.com";
@@ -37,12 +38,14 @@ const VerificationTemp: React.FC<Readonly<VerificationTemplateProps>> = ({
                 <Img
                   src={`${siteUrl}/chad-next.png`}
                   height="50"
-                  alt="ChadNext logo"
+                  alt={`{siteConfig().name} logo`}
                   className="inline-block "
                 />
               </Column>
               <Column align="left">
-                <Text className="ml-2 text-lg font-bold">ChadNext</Text>
+                <Text className="ml-2 text-lg font-bold">
+                  {siteConfig().name}
+                </Text>
               </Column>
             </Row>
           </Section>
@@ -64,7 +67,7 @@ const VerificationTemp: React.FC<Readonly<VerificationTemplateProps>> = ({
           <Text className="mt-8 ">
             Best,
             <br />
-            ChadNext team
+            {siteConfig().name} team
           </Text>
         </Container>
       </Body>

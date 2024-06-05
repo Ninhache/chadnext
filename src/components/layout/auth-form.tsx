@@ -11,6 +11,7 @@ import Icons from "../shared/icons";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { toast } from "../ui/use-toast";
+import { useScopedI18n } from "~/locales/client";
 
 const userAuthSchema = z.object({
   email: z.string().email("Please enter a valid email address."),
@@ -21,6 +22,7 @@ type FormData = z.infer<typeof userAuthSchema>;
 export default function AuthForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [isGithubLoading, setIsGithubLoading] = useState(false);
+  const scopedT = useScopedI18n("authForm");
 
   const {
     register,
@@ -45,16 +47,16 @@ export default function AuthForm() {
 
       if (!res.ok) {
         return toast({
-          title: "Failed to send Magic link!",
-          description: "Please try again later.",
+          title: scopedT("error"),
+          description: scopedT("tryAgain"),
           variant: "destructive",
         });
       }
 
       reset();
       toast({
-        title: "Magic Link sent!",
-        description: "Please check your mail inbox",
+        title: scopedT("success"),
+        description: scopedT("successAdditionalInfos"),
       });
     } catch (error) {
       console.log(error);
@@ -66,11 +68,11 @@ export default function AuthForm() {
         <div className="flex flex-col gap-2.5">
           <div>
             <Label className="sr-only" htmlFor="email">
-              Email
+              {scopedT("form.email")}
             </Label>
             <Input
               id="email"
-              placeholder="name@example.com"
+              placeholder={scopedT("form.emailPlaceholder")}
               type="email"
               disabled={isLoading || isGithubLoading}
               {...register("email")}
@@ -89,7 +91,7 @@ export default function AuthForm() {
             {isLoading && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
             )}
-            Send magic link
+            {scopedT("form.submit")}
           </button>
         </div>
       </form>
@@ -106,7 +108,9 @@ export default function AuthForm() {
           className={cn(buttonVariants({ variant: "outline" }))}
           onClick={() => setIsGithubLoading(true)}
         >
-          Continue with <Icons.gitHub className="ml-2 h-4 w-4" />
+          {scopedT("continueWithGit", {
+            github: <Icons.gitHub className="ml-2 h-4 w-4" />,
+          })}
         </Link>
       )}
     </div>

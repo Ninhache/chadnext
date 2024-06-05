@@ -4,26 +4,27 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { buttonVariants } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
+import { useScopedI18n } from "~/locales/client";
 import Icons from "../shared/icons";
 import LogoutButton from "../shared/logout-button";
 
 const navItems = [
   {
-    title: "Projects",
+    title: "projects",
     href: "/dashboard/projects",
     icon: Icons.projectPlus,
   },
   {
-    title: "Billing",
+    title: "billing",
     href: "/dashboard/billing",
     icon: Icons.billing,
   },
   {
-    title: "Settings",
+    title: "settings",
     href: "/dashboard/settings",
     icon: Icons.settings,
   },
-];
+] as const;
 
 interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
@@ -31,6 +32,7 @@ interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
 
 export default function SidebarNav({ className, ...props }: SidebarNavProps) {
   const pathname = usePathname();
+  const scopedT = useScopedI18n("navBar");
   const isActive = (href: string) => pathname === href;
   return (
     <nav
@@ -49,7 +51,7 @@ export default function SidebarNav({ className, ...props }: SidebarNavProps) {
             "justify-start"
           )}
         >
-          {<item.icon className="mr-2 h-4 w-4 " />} {item.title}
+          {<item.icon className="mr-2 h-4 w-4 " />} {scopedT(`${item.title}`)}
         </Link>
       ))}
 

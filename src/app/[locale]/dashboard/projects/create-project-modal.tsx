@@ -27,6 +27,7 @@ import { Input } from "~/components/ui/input";
 import { toast } from "~/components/ui/use-toast";
 import { FreePlanLimitError } from "~/lib/utils";
 import { checkIfFreePlanLimitReached, createProject } from "./action";
+import { useScopedI18n } from "~/locales/client";
 
 export const projectSchema = z.object({
   name: z.string().min(1, { message: "Please enter a project name." }),
@@ -44,6 +45,7 @@ export default function CreateProjectModal() {
       domain: "",
     },
   });
+  const scopedT = useScopedI18n("projects");
 
   async function onSubmit(values: ProjectFormValues) {
     try {
@@ -53,7 +55,7 @@ export default function CreateProjectModal() {
       }
       await createProject(values);
       toast({
-        title: "Project created successfully.",
+        title: scopedT("create.success"),
       });
       form.reset();
       setIsOpen(false);
@@ -61,12 +63,12 @@ export default function CreateProjectModal() {
       console.error({ error });
       if (error instanceof FreePlanLimitError) {
         return toast({
-          title: "Free plan limit reached. Please upgrade your plan.",
+          title: scopedT("create.error.limitReached"),
           variant: "destructive",
         });
       }
       return toast({
-        title: "Error creating project. Please try again.",
+        title: scopedT("create.error.unknown"),
         variant: "destructive",
       });
     }
@@ -81,12 +83,12 @@ export default function CreateProjectModal() {
           <Button size="icon" variant="ghost">
             <Icons.projectPlus className="h-8 w-8 " />
           </Button>
-          <p className="text-xl font-medium ">Create a project</p>
+          <p className="text-xl font-medium ">{scopedT("create.label")}</p>
         </Card>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Create Project</DialogTitle>
+          <DialogTitle>{scopedT("create.label")}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -95,9 +97,12 @@ export default function CreateProjectModal() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>{scopedT("create.form.name")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="XYZ" {...field} />
+                    <Input
+                      placeholder={scopedT("create.form.namePlaceholder")}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -108,9 +113,12 @@ export default function CreateProjectModal() {
               name="domain"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Domain</FormLabel>
+                  <FormLabel>{scopedT("create.form.domain")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="xyz.com" {...field} />
+                    <Input
+                      placeholder={scopedT("create.form.domainPlaceholder")}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -121,7 +129,7 @@ export default function CreateProjectModal() {
                 {form.formState.isSubmitting && (
                   <Icons.spinner className={"mr-2 h-5 w-5 animate-spin"} />
                 )}
-                Create
+                {scopedT("create.save")}
               </Button>
             </DialogFooter>
           </form>

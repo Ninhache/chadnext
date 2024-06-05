@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { Button } from "~/components/ui/button";
+import { useScopedI18n } from "~/locales/client";
 
 export default function Error({
   error,
@@ -10,6 +11,8 @@ export default function Error({
   error: Error;
   reset: () => void;
 }) {
+  const scopedT = useScopedI18n("error");
+
   useEffect(() => {
     // Log the error to an error reporting service
     console.error(error);
@@ -18,9 +21,9 @@ export default function Error({
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-y-4">
       <h2 className=" text-4xl font-bold text-destructive">
-        Something Went Wrong!
+        {scopedT("source")}
       </h2>
-      <Button onClick={() => reset()}>Try Again</Button>
+      <Button onClick={() => reset()}>{scopedT("retry")}</Button>
     </div>
   );
 }

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { BrandIcons } from "~/components/shared/brand-icons";
 import Icons from "~/components/shared/icons";
 import { buttonVariants } from "~/components/ui/button";
+import { siteConfig } from "~/config/site";
 import { nFormatter } from "~/lib/utils";
 import { getScopedI18n } from "~/locales/server";
 
@@ -16,6 +17,7 @@ export default async function Hero() {
   )
     .then((res) => res.json())
     .catch((e) => console.error(e));
+
   return (
     <section>
       <div className="container flex w-full flex-col items-center justify-center space-y-20 py-16 md:py-20 lg:py-24 xl:py-28">
@@ -29,7 +31,7 @@ export default async function Hero() {
           >
             <Icons.twitter className="h-5 w-5 text-blue-700" />
             <p className="text-sm font-semibold text-blue-700">
-              {scopedT("top")} ChadNext
+              {scopedT("top")} {siteConfig().name}
             </p>
           </a>
           <h1 className=" text-balance bg-gradient-to-br  from-gray-900 via-gray-800 to-gray-400 bg-clip-text text-center font-heading text-[40px] font-bold leading-tight tracking-[-0.02em] text-transparent  drop-shadow-sm duration-300 ease-linear [word-spacing:theme(spacing.1)] dark:bg-gradient-to-br dark:from-gray-100 dark:to-gray-900 md:text-7xl md:leading-[5rem]">

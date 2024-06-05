@@ -4,19 +4,22 @@ import React from "react";
 import Icons from "./shared/icons";
 import { Button } from "./ui/button";
 import { toast } from "./ui/use-toast";
+import { useScopedI18n } from "~/locales/client";
 
 export default function CopyButton({ content }: { content: string }) {
+  const scopedT = useScopedI18n("copy");
+
   const copyToClipboard = (content: string) => {
     if (!navigator.clipboard) {
       toast({
-        title: "Error copying!",
-        description: "Please try again.",
+        title: scopedT("error"),
+        description: scopedT("tryAgain"),
         variant: "destructive",
       });
     }
     navigator.clipboard.writeText(content);
     toast({
-      title: "Project ID copied!",
+      title: scopedT("success"),
     });
   };
 
@@ -28,7 +31,7 @@ export default function CopyButton({ content }: { content: string }) {
       variant="ghost"
       onClick={() => copyToClipboard(content)}
     >
-      <span className="sr-only">Copy</span>
+      <span className="sr-only">{scopedT("label")}</span>
       <Icons.copy className="h-3 w-3" />
     </Button>
   );

@@ -7,8 +7,13 @@ import { getUserSubscriptionPlan } from "~/lib/subscription";
 import { validateRequest } from "~/server/auth";
 
 export async function GET(req: NextRequest) {
-  const locale = req.cookies.get("Next-Locale")?.value || "en";
+  let locale = req.cookies.get("Next-Locale")?.value;
 
+  if (locale !== "fr" && locale !== "en") {
+    locale = "en";
+  }
+
+  // @ts-expect-error we know it's valid...
   const billingUrl = siteConfig(locale).url + "/dashboard/billing/";
   try {
     const { user, session } = await validateRequest();
