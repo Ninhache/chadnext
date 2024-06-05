@@ -1,7 +1,7 @@
 import { type MetadataRoute } from "next";
 import { siteConfig } from "~/config/site";
 
-const locales = ["en", "fr"];
+const locales = ["en", "fr"] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return locales
