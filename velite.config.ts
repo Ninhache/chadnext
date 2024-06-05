@@ -1,29 +1,44 @@
-import { defineConfig, s } from 'velite'
+import { defineConfig, s } from "velite";
 
 // `s` is extended from Zod with some custom schemas,
 // you can also import re-exported `z` from `velite` if you don't need these extension schemas.
 
 export default defineConfig({
-  root: './src/content',
+  root: "./src/content",
   collections: {
-    changes: {
-      name: 'Change', // collection type name
-      pattern: 'changelog/**/*.md', // content files glob pattern
-      schema: s
-        .object({
-          title: s.string(),
-          date: s.isodate(), // input Date-like string, output ISO Date string.
-          content: s.markdown() // transform markdown to html
-        })
+    changes_en: {
+      name: "Change_EN",
+      pattern: "changelog/en/**/*.md",
+      schema: s.object({
+        title: s.string(),
+        date: s.isodate(),
+        content: s.markdown(),
+      }),
     },
-    abouts: {
-      name: 'About', // collection type name
-      pattern: 'about/**/*.md', // content files glob pattern
-      schema: s
-        .object({
-          title: s.string(),
-          content: s.markdown() // transform markdown to html
-        })
+    changes_fr: {
+      name: "Change_FR",
+      pattern: "changelog/fr/**/*.md",
+      schema: s.object({
+        title: s.string(),
+        date: s.isodate(),
+        content: s.markdown(),
+      }),
     },
-  }
-})
+    abouts_en: {
+      name: "About_EN",
+      pattern: "about/en/**/*.md",
+      schema: s.object({
+        title: s.string(),
+        content: s.markdown(),
+      }),
+    },
+    abouts_fr: {
+      name: "About_FR",
+      pattern: "about/fr/**/*.md",
+      schema: s.object({
+        title: s.string(),
+        content: s.markdown(),
+      }),
+    },
+  },
+});
